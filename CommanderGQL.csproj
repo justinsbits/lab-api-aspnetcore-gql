@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\lab-datastore-migmgr-dotnetcore-ef\appsettings.json" Link="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="GraphQL.Server.Ui.Voyager" Version="4.4.1" />
     <PackageReference Include="HotChocolate.AspNetCore" Version="11.0.8" />
     <PackageReference Include="HotChocolate.Data.Entityframework" Version="11.0.8" />
@@ -16,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommanderDA\CommanderDA.csproj" />
+    <ProjectReference Include="..\lab-data-dotnetcore-ef\CommanderData.csproj" />
   </ItemGroup>
 
 </Project>
