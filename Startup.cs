@@ -18,25 +18,14 @@ namespace CommanderGQL
 {
     public class Startup
     {
-        private readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-        private readonly Action<DbContextOptionsBuilder> DBContextOptions;
+        private readonly string MyAllowedSpecificOrigins = "_myAllowSpecificOrigins";
+        private readonly IConfiguration Configuration;
+        
+        
 
         public Startup(IConfiguration configuration)
         {
-
-            //var builder = new SqlConnectionStringBuilder(
-            //configuration.GetConnectionString("CommandConStr"));
-            //builder.Password = configuration["DbPassword"];
-            //string conStr = builder.ConnectionString;
-
-            DBContextOptions = opt => opt.UseSqlServer  //.Net 5
-               (configuration.GetConnectionString("CommandConStr"))
-               .LogTo(
-                   Console.WriteLine, // ...or log to file etc.
-                   new[] { DbLoggerCategory.Database.Command.Name,
-                        DbLoggerCategory.Database.Transaction.Name },
-                   LogLevel.Debug)
-               .EnableSensitiveDataLogging(); // !!! not a prod 
+            Configuration = configuration;
         }
         
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -45,14 +34,22 @@ namespace CommanderGQL
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
+                options.AddPolicy(name: MyAllowedSpecificOrigins,
                 builder =>
                 {
                     builder.WithOrigins("http://localhost:3000").AllowAnyHeader(); // local dev testing
                 });
             });
+            
+            // !!! centralize appsettings.json
+           // var sqlConStrBuilder = new SqlConnectionStringBuilder(
+            //    Configuration.GetConnectionString("CommandConStr"));
+            // !!! UserSecretsId in .csproj is copy paste of GUID from CommanderDBMigraitonMgr (i.e. reference from there) 
+           // sqlConStrBuilder.Password = Configuration["DbPassword"]; 
+           // string sqlConStr = sqlConStrBuilder.ConnectionString;
 
-            services.AddPooledDbContextFactory<AppDbContext>(DBContextOptions); 
+            string sqlConStr = Configuration.GetConnectionString("CommandConStr");
+            services.AddPooledDbContextFactory<AppDbContext>(opt => opt.UseSqlServer(sqlConStr)); 
             services
                 .AddGraphQLServer()
                 .AddQueryType<Query>()
@@ -80,7 +77,7 @@ namespace CommanderGQL
 
             app.UseRouting();
 
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors(MyAllowedSpecificOrigins);
 
             // setup endpoint (e.g. access to http://localhost:5000/graphql/   ...note: 'graphql' is typical convention for endpoint)
             app.UseEndpoints(endpoints =>

@@ -1,1 +1,0 @@
-﻿C:\dev\src\projects\lab\services\lab-api-aspnetcore-gql> docker-compose up
