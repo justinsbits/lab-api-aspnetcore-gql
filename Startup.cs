@@ -37,7 +37,7 @@ namespace CommanderGQL
                 options.AddPolicy(name: MyAllowedSpecificOrigins,
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:3000").AllowAnyHeader(); // local dev testing
+                    builder.WithOrigins("http://localhost:3000").WithOrigins("http://localhost:3001").AllowAnyHeader(); // !!! local dev testing
                 });
             });
             
@@ -52,6 +52,7 @@ namespace CommanderGQL
             services.AddPooledDbContextFactory<AppDbContext>(opt => opt.UseSqlServer(sqlConStr)); 
             services
                 .AddGraphQLServer()
+                .EnableRelaySupport()
                 .AddQueryType<Query>()
                 .AddMutationType<Mutation>()
                 .AddType<ToolType>()
