@@ -1,6 +1,6 @@
 using System.Linq;
-using CommanderDA;
-using CommanderDA.Entities;
+using CommanderData;
+using CommanderData.Entities;
 using HotChocolate;
 using HotChocolate.Data;
 

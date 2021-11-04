@@ -1,4 +1,4 @@
-using CommanderDA.Entities;
+using CommanderData.Entities;
 
 namespace CommanderGQL.GraphQL.Tools
 {
